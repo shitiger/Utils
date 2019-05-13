@@ -1,11 +1,7 @@
 package httpPool;
 
 
-import com.alibaba.fastjson.JSON;
-import com.ipr.god.common.util.MyDateUtil;
-import com.ipr.god.dataobject.CustomerDO;
-import com.ipr.god.dataobject.SharpEyeDTO;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
 import org.apache.http.HttpEntity;
@@ -22,8 +18,6 @@ import org.apache.http.message.BasicHeaderElementIterator;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 
@@ -34,7 +28,6 @@ import java.text.ParseException;
  */
 public class HttpClientPoolUtil {
 
-    private static Logger logger = LoggerFactory.getLogger(HttpClientPoolUtil.class);
 
     public static PoolingHttpClientConnectionManager cm = null;
 
@@ -212,8 +205,8 @@ public class HttpClientPoolUtil {
                 method.abort();
             }
             e.printStackTrace();
-            logger.error("execute get request exception, url:" + uri + ", exception:" + e.toString() + ",cost time(ms):"
-                    + (System.currentTimeMillis() - startTime));
+          /*  logger.error("execute get request exception, url:" + uri + ", exception:" + e.toString() + ",cost time(ms):"
+                    + (System.currentTimeMillis() - startTime));*/
         } finally {
             if (httpEntity != null) {
                 try {
@@ -232,26 +225,5 @@ public class HttpClientPoolUtil {
     //    String token = "https://sharpeyespc.zbj.com/access/account/110054801/secret/SHW2sf4WfrTxc";
         String s ="https://sharpeyespc.zbj.com/enterprise/information?companyName=磐安县海润塑胶厂&type=1&access_token=9d646c6f45e3e1f7724055461ade4ffc";
         String sd =  HttpClientPoolUtil.execute(s);
-        SharpEyeDTO sharpEyeDTO = JSON.parseObject(sd, SharpEyeDTO.class);
-        CustomerDO customerDO = new CustomerDO();
-        if (sharpEyeDTO!=null && sharpEyeDTO.getData().getIndustryVo()!=null){
-            customerDO.setNewIndustryId(Long.valueOf(sharpEyeDTO.getData().getIndustryVo().getCode()));
-            if (!org.springframework.util.StringUtils.isEmpty(sharpEyeDTO.getData().getRegCapital()) || sharpEyeDTO.getData().getRegCapitalVo().getRegCapital()!=null){
-
-                String regCaptitalStr = sharpEyeDTO.getData().getRegCapital();
-                customerDO.setRegCaptialStr(regCaptitalStr);
-                //资产1kw以上，经营5年以上为大客户
-                if (Double.valueOf(sharpEyeDTO.getData().getRegCapitalVo().getRegCapital())> 1000*10000
-                        || MyDateUtil.caculateDateSub(MyDateUtil.getDate(sharpEyeDTO.getData().getRegDate())) > 5){
-                    customerDO.setCustomerTypeId(2);
-                }
-            }
-            if (sharpEyeDTO.getData().getRegCapitalVo()!=null && !org.springframework.util.StringUtils.isEmpty(sharpEyeDTO.getData().getRegCapitalVo().getRegCapital())){
-                String regCaptital = sharpEyeDTO.getData().getRegCapitalVo().getRegCapital().split("\\.")[0];
-                customerDO.setRegCapital(Long.valueOf(regCaptital));
-            }
-            //  customerMapperMaster.updateCustomer(customerDO);
-            System.out.println(customerDO);
-        }
     }
 }

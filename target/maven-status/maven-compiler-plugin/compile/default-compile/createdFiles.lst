@@ -1,0 +1,10 @@
+group\GroupDO\GroupTestDO.class
+http\HTTPUtils$1.class
+httpPool\HttpClientPoolUtil.class
+excel\ExcelUtil.class
+group\GroupBySegment.class
+httpPool\HttpConnectionManager.class
+httpPool\HttpClientPoolUtil$1.class
+http\HTTPUtils$miTM.class
+http\HTTPUtils.class
+list\AveraAssign.class
